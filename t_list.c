@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/27 19:54:59 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/27 21:13:04 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ char *nume_var(char* str, int *id)
 		i++;
 		(*id)++;
 	}
-	printf("num : /****%c*****/\n", str[*id]);
 	char *ret  = (char *)malloc(sizeof(char) * (i + 1));
 	i = 0;
 	while (str[j] != 0 && str[j] != '$' && str[j] != ' ' && str[j] != DQUOTE)
@@ -158,18 +157,45 @@ int len_str(t_envi *env, char *str)
 	return (ret);
 }
 
-char *fct3(t_envi *env, char *str, int *i, int *j)
+void	fct5(char *str, int **tab, char *s)
+{
+	int	i = 0;
+	
+	while (s[i] != 0)
+		str[(*tab[1]++)] = s[i++];
+}
+
+void	fct4(t_envi *env, char *str, char *ret, int **tab)
+{
+	t_envi *temp = env;
+
+	char *var_name = nume_var(str, tab[0]);
+	while (temp != NULL)
+	{
+		if (ft_strncmp(var_name, temp->var_name, ft_strlen(env->var_name)) == SUCCESS)
+		{
+			fct5(ret, tab, temp->var_value);
+			free(var_name);
+		}
+		temp = temp->next;
+	}
+	free(var_name);
+}
+
+
+void	fct3(t_envi *env, char *str, char *ret, int **tab)
 {
 	int id = 0;
-	char c = str[(*i)++];
+	char c = str[(*tab[0])++];
 	
-	while (str[(*i)] != 0 && str[(*i)] != c)
+	while (str[(*tab[0])] != 0 && str[*tab[0]] != c)
 	{
-		if (str[(*i)] == '$' && c == DQUOTE)
-			i =+ fct4(env, str, i, j);
+		if (str[(*tab[0])] == '$' && c == DQUOTE)
+			fct4(env, str, ret, tab);
 		else
-			;
+			ret[(*tab[1]++)] = str[(*tab[0]++)];
 	}
+	(*tab[0])++;
 }
 
 char *change_str(t_envi *env, char *str)
@@ -177,17 +203,21 @@ char *change_str(t_envi *env, char *str)
 	char *ret;
 	int i = 0;
 	int j = 0;
-	
+	int	**tab = (int **)malloc(sizeof(int *) * 2);
+	tab[0] = &i;
+	tab[1] = &j;
+
 	ret = (char *)malloc(sizeof(char) * (len_str(env, str) + 1));
 	while(str[i] != 0)
 	{
 		if(str[i] == SQUOTE || str[i] == DQUOTE)
-			ft_strlcat(ret, fct3(env ,str, &i, &j));
+			fct3(env ,str, ret, tab);
 		else if (str[i] == '$')
-			ft_strlcat(ret, fct4(env, str, &i, &j));
+			fct4(env, str, ret, tab);
 		else
-			ret[j++] == str[i++];	
+			ret[j++] = str[i++];	
 	}
+	free(tab);
 	return (ret);
 }
 
@@ -223,6 +253,6 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		line = readline("zeeeeebi =>");
-		printf("len_str %d\n", len_str(glb->env, line));
+		printf("change_str  %s\n", change_str(glb->env, line));
 	}
 }
