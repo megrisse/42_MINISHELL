@@ -8,13 +8,15 @@
 
 
 
+
 void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
 {
 	int total_pipes = nbr_mots(glb->cmnd, '|');
 	char **str = ft_split(glb->cmnd, '|');
-	init_list(left, str[total_pipes - pipe_num]);
+	int i = 0;
+	*left = init_list(glb, *left, str[total_pipes - pipe_num]);
 	if (str[total_pipes - pipe_num + 1] != NULL)
-		init_list(right, str[total_pipes - pipe_num + 1]);
+		*right = init_list(glb, *right, str[total_pipes - pipe_num + 1]);
 	else
 		right = NULL;
 	ft_free(str);
@@ -80,6 +82,7 @@ int exec_builting(t_list *cmnd_list, t_envi *env)
 	return (SUCCESS);
 }
 
+
 int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 {
 	t_list *left_cmnd = NULL;
@@ -116,10 +119,6 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 	return 0;
 }
 
-
-
-
-
 int shell(t_global *global)
 {
 	char *line;
@@ -133,7 +132,7 @@ int shell(t_global *global)
 		if (j == 0)
 			continue ;
 		global->cmnd = line;
-		init_list(global, line);
+		global->cmnd_list = init_list(global, global->cmnd_list, line);
 		n_cmnd = nbr_mots(global->cmnd, '|');
 		ft_pipes(global, n_cmnd, NULL, 0);
 		free(line);

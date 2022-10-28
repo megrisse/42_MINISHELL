@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 17:42:01 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/27 19:07:01 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:01:48 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,9 @@ static char	**ft_remplissage(char *s, char **copy, char c)
 	if ((size_t)start != strlen(s))
 		copy[i++] = ft_copy(s, start, end);
 	copy[i] = NULL;
+	i = 0;
+	// while (copy[i] != 0)
+	// 	printf("copy = %s\n", copy[i++]);
 	return (copy);
 }
 
@@ -136,7 +139,7 @@ char	**ft_split(char *s, char c)
 	size = nbr_mots(s, c);
 	if (size == FAILDE)
 		return (printf("error quots\n"), NULL);
-	printf("%d\n", size);
+	//printf("size = %d\n", size);
 	copy = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!copy)
 		return (NULL);
