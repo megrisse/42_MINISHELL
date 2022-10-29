@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/29 13:59:46 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/29 22:41:44 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 
 
 	init_parties(global, &left_cmnd, &right_cmnd, pipe_num);
-	if (key == 0 && right_cmnd == NULL && exec_builting(left_cmnd, global->env) == SUCCESS)
+	global->status = exec_builting(global->cmnd_list, global->env);
+	if (key == 0 && right_cmnd == NULL && global->status == SUCCESS)
 		return (SUCCESS);
 	int	fd[2];
 	if (pipe(fd) < 0)

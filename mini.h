@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/28 19:14:48 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:36:02 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ char	*ft_strdup(char *s1);
 char	**ft_split(char *s, char c);
 char	*ft_strlcat(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int i);
+char	*ft_itoa(int nbr);
 
 
 

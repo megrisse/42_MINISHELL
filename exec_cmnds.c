@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:46:29 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/28 19:23:49 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:53:52 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	exec_cmnd(t_list *cmnd_list, t_envi *env)
 	if (builtin_fct(cmnd, &env) != SUCCESS)
 	{
 		if (other_fct(cmnd, &env) != SUCCESS)
-			return (write(2 ,"error\n", 6), exit(1), FAILDE);//exit bwhd int
+			return (ft_putstr_fd(2, cmnd->cmnd[0]), write(2 ,": command not found\n", 22), exit(1), FAILDE);//exit bwhd int
 	}
 	return (exit(0), SUCCESS);
 }

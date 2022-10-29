@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/28 19:23:17 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:50:55 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,22 +103,28 @@ char *nume_var(char* str, int *id)
 }
 
 
-int fct2(t_envi *env, char *s, int *i)
+int fct2(t_global *glb, char *s, int *i)
 {
-	t_envi *temp = env;
+	t_envi *temp = glb->env;
+	char	*exit_s;
+	int		len;
 
 	char *var_name = nume_var(s, i);
+	exit_s = ft_itoa(glb->status);
+	len = ft_strlen(exit_s);
+	if (ft_strncmp(var_name, "?", 1) == SUCCESS)
+		return (free(var_name), free(exit_s), len);
 	while (temp != NULL)
 	{
-		if (ft_strncmp(var_name, temp->var_name, ft_strlen(env->var_name)) == SUCCESS)
-			return (free(var_name), ft_strlen(env->var_value));
+		if (ft_strncmp(var_name, temp->var_name, ft_strlen(glb->env->var_name)) == SUCCESS)
+			return (free(var_name), free(exit_s), ft_strlen(glb->env->var_value));
 		temp = temp->next;
 	}
-	return (free(var_name), 0);
+	return (free(var_name), free(exit_s), 0);
 }
 
 
-int fct(t_envi *env, char *str, int *id, char c)
+int fct(t_global *glb, char *str, int *id, char c)
 {
 	int i = 0;
 	int j = (*id) + 1;
@@ -126,7 +132,7 @@ int fct(t_envi *env, char *str, int *id, char c)
 	while (str[j] != 0 && str[j] != c)
 	{
 		if (str[j] == '$' && c == DQUOTE)
-			i += fct2(env, str, &j);
+			i += fct2(glb, str, &j);
 		else
 		{
 			i++;
@@ -138,16 +144,16 @@ int fct(t_envi *env, char *str, int *id, char c)
 }
 
 
-int len_str(t_envi *env, char *str)
+int len_str(t_global *glb, char *str)
 {
 	int	i = 0;
 	int ret = 0;
 	while (str[i] != 0)
 	{
 		if (str[i] == DQUOTE || str[i] == SQUOTE)
-			ret += fct(env, str, &i,  str[i]);
+			ret += fct(glb, str, &i,  str[i]);
 		else if (str[i] == '$')
-			ret += fct2(env, str, &i);
+			ret += fct2(glb, str, &i);
 		else
 			ret++;
 		i++;
@@ -163,14 +169,18 @@ void	fct5(char *str, int **tab, char *s)
 		str[(*tab[1])++] = s[i++];
 }
 
-void	fct4(t_envi *env, char *str, char *ret, int **tab)
+void	fct4(t_global *glb, char *str, char *ret, int **tab)
 {
-	t_envi *temp = env;
+	t_envi *temp = glb->env;
+	char	*exit_s;
 
+	exit_s = ft_itoa(glb->status);
 	char *var_name = nume_var(str, tab[0]);
+	if (ft_strncmp(exit_s, "?", 1) == SUCCESS)
+		fct5(ret, tab, exit_s);
 	while (temp != NULL)
 	{
-		if (ft_strncmp(var_name, temp->var_name, ft_strlen(env->var_name)) == SUCCESS)
+		if (ft_strncmp(var_name, temp->var_name, ft_strlen(glb->env->var_name)) == SUCCESS)
 			fct5(ret, tab, temp->var_value);
 		temp = temp->next;
 	}
@@ -178,7 +188,7 @@ void	fct4(t_envi *env, char *str, char *ret, int **tab)
 }
 
 
-void	fct3(t_envi *env, char *str, char *ret, int **tab)
+void	fct3(t_global *glb, char *str, char *ret, int **tab)
 {
 	int id = 0;
 	char c = str[(*tab[0])++];
@@ -186,14 +196,14 @@ void	fct3(t_envi *env, char *str, char *ret, int **tab)
 	while (str[(*tab[0])] != 0 && str[*tab[0]] != c)
 	{
 		if (str[(*tab[0])] == '$' && c == DQUOTE)
-			fct4(env, str, ret, tab);
+			fct4(glb, str, ret, tab);
 		else
 			ret[(*tab[1])++] = str[(*tab[0])++];
 	}
 	(*tab[0])++;
 }
 
-char *change_str(t_envi *env, char *str)
+char *change_str(t_global *glb, char *str)
 {
 	char *ret;
 	int i = 0;
@@ -202,16 +212,16 @@ char *change_str(t_envi *env, char *str)
 	tab[0] = &i;
 	tab[1] = &j;
 
-	int key = len_str(env, str);
+	int key = len_str(glb, str);
 	ret = (char *)malloc(sizeof(char) * (key + 1));
 	if (!ret)
 		return(NULL);
 	while(str[i] != 0)
 	{
 		if(str[i] == SQUOTE || str[i] == DQUOTE)
-			fct3(env ,str, ret, tab);
+			fct3(glb ,str, ret, tab);
 		else if (str[i] == '$')
-			fct4(env, str, ret, tab);
+			fct4(glb, str, ret, tab);
 		else
 			ret[j++] = str[i++];	
 	}
@@ -233,7 +243,7 @@ t_list *init_list(t_global *glb, t_list *head,  char *str)
 		return (printf("error quotes\n"), NULL);
     while (cmnd != NULL && cmnd[i] != NULL)
     {
-        temp = change_str(glb->env, cmnd[i++]);
+        temp = change_str(glb, cmnd[i++]);
         if (add_back_list(&head, new_list(temp)) != SUCCESS)
             return (free_list(&head, head),NULL);//free
     }

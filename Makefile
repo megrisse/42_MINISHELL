@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hmeur <hmeur@student.42.fr>                +#+  +:+       +#+         #
+#    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/10/25 11:48:31 by hmeur            ###   ########.fr        #
+#    Updated: 2022/10/29 21:51:41 by megrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,12 +28,13 @@ SRC :=	readline.c \
 		env_utils.c \
 		exec_cmnds.c \
 		ft_split.c \
+		ft_itoa.c \
 		t_list.c \
 		utils.c \
 		redirection.c\
 		init_cmnd.c \
 		commands/cd.c \
-		commands/env_vars.c
+		commands/env_vars.c \
 
 
 OBJS := $(SRC:.c=.o)
