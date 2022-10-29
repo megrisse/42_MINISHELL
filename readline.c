@@ -1,12 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   readline.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
+/*   Updated: 2022/10/29 13:59:46 by megrisse         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 
 //protect all malloc in your minishell
-
-
-
-
 
 
 void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)

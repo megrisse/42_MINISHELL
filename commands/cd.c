@@ -6,29 +6,25 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/29 13:19:58 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:13:39 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mini.h"
 
-
-
-char *get_oldpwd(t_envi *env)
+char	*get_var(t_envi **env, char *str)
 {
 	t_envi *temp;
 
-	temp = env;
+	temp = *env;
 	while (temp != NULL)
 	{
-		if (ft_strncmp("OLDPWD", env->var_name, 6) == SUCCESS)
-			return (ft_strdup(env->var_value));
+		if (ft_strncmp(str, temp->var_name, 6) == SUCCESS)
+			return (ft_strdup(temp->var_value));
 		temp = temp->next;
 	}
 	return (NULL);
 }
-
-
 
 int	ft_cd(t_cmnd *cmnd, t_envi **env)
 {
@@ -38,13 +34,19 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 
 	getcwd(pwd, 1024);
 	old_pwd = ft_strdup(pwd);
-	//check_path_(cmnd->cmnd[1]);
 	//check_using cd without flags
+	if (cmnd->cmnd[1] == NULL)
+	{
+		o_pwd = get_var(env, "HOME");
+		chdir(o_pwd);
+		return (free(o_pwd), SUCCESS);
+	}
+
 	if (chdir(cmnd->cmnd[1]) != 0)
 	{
 		if (ft_strncmp(cmnd->cmnd[1] , "-", 1) == SUCCESS)
 		{
-			o_pwd = get_oldpwd(*env);
+			o_pwd = get_var(env, "OLDPWD");
 			chdir(o_pwd);
 			printf("~%s\n", o_pwd);
 			return (free(o_pwd), SUCCESS);
