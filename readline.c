@@ -110,13 +110,15 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 		close_fds(NULL, NULL, old_fd, 1);
 		wait(&global->status);
 		unlink(".heredoc");
-		//free left & right
 		if (right_cmnd != NULL)
 			ft_pipes(global, --pipe_num, fd, 1);
 		else
 			return (SUCCESS);
 	}
-	return 0;
+	free_list(&left_cmnd, left_cmnd);
+	if (right_cmnd != NULL)
+		free_list(&right_cmnd, right_cmnd);
+	return (0);
 }
 
 int shell(t_global *global)
