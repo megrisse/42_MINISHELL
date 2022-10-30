@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/29 22:41:44 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 17:45:50 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 	{
 		close_fds(NULL, NULL, old_fd, 1);
 		wait(&global->status);
+		
 		unlink(".heredoc");
 		if (right_cmnd != NULL)
 			ft_pipes(global, --pipe_num, fd, 1);
@@ -134,10 +135,14 @@ int shell(t_global *global)
 {
 	char *line;
 	int	n_cmnd;
-	while(1)
+	int j;
+	while(1337)
 	{
 		line = readline("Minishel => ");
-		int j = ft_strlen(line);
+		//fct for exit ctrl-D
+		if (line == NULL)
+			exit(global->status);
+		j = ft_strlen(line);
 		if (j != 0)
 			add_history(line);
 		if (j == 0)
@@ -159,7 +164,7 @@ int main(int ac, char **av, char **env)
 
 	//env valide
 	(void)ac;(void)av;
-	//signals
+	handler_sig(global);
 	shell(global);
 	return (SUCCESS);
 }

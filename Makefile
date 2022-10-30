@@ -6,7 +6,7 @@
 #    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/10/29 21:51:41 by megrisse         ###   ########.fr        #
+#    Updated: 2022/10/30 17:44:33 by megrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ HEADER := mini.h
 
 CC := gcc
 
-CFLAGS := #-Wall -Werror -Wextra
+CFLAGS += #-Wall -Werror -Wextra
 
-READLINE_FLAG := -lreadline
+LDFLAGS += -lreadline
 
 SRC :=	readline.c \
 		commands.c \
@@ -35,6 +35,7 @@ SRC :=	readline.c \
 		init_cmnd.c \
 		commands/cd.c \
 		commands/env_vars.c \
+		signals.c \
 
 
 OBJS := $(SRC:.c=.o)
@@ -43,10 +44,10 @@ all :	$(NAME)
 		@echo "Making Minishell"
 
 $(NAME) :	$(OBJS)
-			@$(CC) $(CFLAGS) $(SRC) -o $(NAME) $(READLINE_FLAG)
+	$(CC)  $(LDFLAGS) $(OBJS) -o $(NAME) 
 
 %.o : %.c $(HEADER)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 clean :
 	@rm -rf $(OBJS)

@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/29 21:36:02 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 17:45:32 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,11 +136,11 @@ int		type_red(t_list *cmnd);
 t_cmnd	*initializ_cmnd(t_list *cmnd_list, t_envi *env);
 char	**init_env_table(t_envi *envi, int size);
 char	**init_cmnd_table(t_list *cmnd, int size);
+void    handler_sig(t_global *glb);
 
 
 
 void print_l(t_list *head, char *str);
-
 
 
 
