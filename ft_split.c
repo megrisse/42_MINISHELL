@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 17:42:01 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/28 21:18:20 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:34:34 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,20 +140,17 @@ char	**ft_split(char *s, char c)
 	return (ft_remplissage(s, copy, c));
 }
 
-/*
-int main(int ac, char **av)
-{
-	char **str;
-	int i;
-	while (1)
-	{
-		char *line = readline("zebi=>");
-		str = ft_split(line, '|');
-		i = -1;
-		while (str != NULL && str[++i])
-			printf("%s\n", str[i]);
-		printf("\n");
-	}
-}
-
-*/
+// int main(int ac, char **av)
+// {
+// 	char **str;
+// 	int i;
+// 	while (1)
+// 	{
+// 		char *line = readline("zebi=>");
+// 		str = ft_split(line, '|');
+// 		i = -1;
+// 		while (str != NULL && str[++i])
+// 			printf("%s\n", str[i]);
+// 		printf("\n");
+// 	}
+// }

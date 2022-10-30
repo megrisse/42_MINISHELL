@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:46:29 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/29 21:53:52 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:37:05 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,24 @@ int other_fct(t_cmnd *cmnd, t_envi **env)
 {
 	char **paths = find_paths(env);
 	char *path_cmnd;
+	char *ptr;
+	ptr =  ft_strlcat((char *)"/", cmnd->cmnd[0]);
 	int i = 0;
 	int j;
 	while (paths[i] != NULL)
 	{
-
-		path_cmnd = ft_strlcat(paths[i++], ft_strlcat((char *)"/", cmnd->cmnd[0]));
+		path_cmnd = ft_strlcat(paths[i++], ptr);
 		if (access(path_cmnd, F_OK) == SUCCESS)
 		{
 			//absolut path : /bin/ls
 			j = execve(path_cmnd, cmnd->cmnd, cmnd->env);
 			if (j < 0)
 				return(printf("error f execve\n"), ft_free(paths), FAILDE);
-			return (ft_free(paths), SUCCESS);
+			return (free(ptr), ft_free(paths), SUCCESS);
 		}
+		free(path_cmnd);
 	}
-	return (FAILDE);
+	return (free(ptr), FAILDE);
 }
 
 
@@ -101,8 +103,8 @@ int	exec_cmnd(t_list *cmnd_list, t_envi *env)
 	if (builtin_fct(cmnd, &env) != SUCCESS)
 	{
 		if (other_fct(cmnd, &env) != SUCCESS)
-			return (ft_putstr_fd(2, cmnd->cmnd[0]), write(2 ,": command not found\n", 22), exit(1), FAILDE);//exit bwhd int
+			return (ft_free(cmnd->cmnd), ft_putstr_fd(2, cmnd->cmnd[0]), write(2 ,": command not found\n", 21), exit(127), FAILDE);//exit bwhd int
 	}
-	return (exit(0), SUCCESS);
+	return (ft_free(cmnd->cmnd), exit(0), SUCCESS);
 }
 

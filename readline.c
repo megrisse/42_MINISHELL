@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/30 17:45:50 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:40:24 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,11 @@ void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
 {
 	int total_pipes = nbr_mots(glb->cmnd, '|');
 	char **str = ft_split(glb->cmnd, '|');
+	if (str == NULL)
+		return ;
 	int i = 0;
 	*left = init_list(glb, *left, str[total_pipes - pipe_num]);
+
 	if (str[total_pipes - pipe_num + 1] != NULL)
 		*right = init_list(glb, *right, str[total_pipes - pipe_num + 1]);
 	else
@@ -98,6 +101,8 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 
 
 	init_parties(global, &left_cmnd, &right_cmnd, pipe_num);
+	if (left_cmnd == NULL)
+		return (1);
 	global->status = exec_builting(global->cmnd_list, global->env);
 	if (key == 0 && right_cmnd == NULL && global->status == SUCCESS)
 		return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/29 21:50:55 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/30 18:31:31 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,7 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 		temp = temp->next;
 	}
 	free(var_name);
+	free(exit_s);
 }
 
 
@@ -238,7 +239,7 @@ t_list *init_list(t_global *glb, t_list *head,  char *str)
     cmnd = ft_split(str, ' ');
     i = 0;
     head = NULL;
-    //cmnd = NULL : kayna a quote whda
+		
 	if (cmnd == NULL)
 		return (printf("error quotes\n"), NULL);
     while (cmnd != NULL && cmnd[i] != NULL)
