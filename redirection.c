@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hmeur <hmeur@student.42.fr>                +#+  +:+       +#+        */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:39:55 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/24 17:35:21 by hmeur            ###   ########.fr       */
+/*   Updated: 2022/10/31 22:22:49 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int redirection_inp(char *file_name, int red_type)
 
 int redirection_out(char *file_name, int red_type)
 {
-	int flags;
+	int flags = 0;
 	int fd;
 	int fd_cpy;
 

@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/30 18:14:40 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:56:47 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int		exec_cmnd(t_list *cmnd_list, t_envi *env);
 int		builtin_fct(t_cmnd *cmnd, t_envi **env);
 
 void	ft_free(char **str);
-
+void 	free_tcmnd(t_cmnd *cmnd);
 int		ft_pwd(t_cmnd *cmnd, t_envi **env);
 int		ft_exit(t_cmnd *cmnd, t_envi **env);
 int		ft_cd(t_cmnd *cmnd, t_envi **env);

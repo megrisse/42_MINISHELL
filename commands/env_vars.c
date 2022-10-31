@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/30 14:00:47 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:51:06 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,19 @@ int	check_var(char *cmnd)
 
 int	ft_export(t_cmnd *cmnd, t_envi **env)
 {
-	int i = size_envi(*env);
 	char *name;
+	
+	name =  name_var(cmnd->cmnd[1]);
 	if (check_var(cmnd->cmnd[1]) != SUCCESS)
 		return (FAILDE);
-	if (find_var(*env, name_var(cmnd->cmnd[1])) != NULL)
+	if (find_var(*env, name) != NULL)
 	{
-		name =  name_var(cmnd->cmnd[1]);
 		change_var_value(*env, name, value_var(cmnd->cmnd[1]));
 		free(name);
 		return (SUCCESS);
 	}
 	add_back(env, new_node(cmnd->cmnd[1]));
-	return (SUCCESS);
+	return (free(name), SUCCESS);
 }
 
 

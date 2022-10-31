@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 15:25:42 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/30 17:12:57 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:19:54 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void handler(int sig)
 {
     x = 127 + sig;
     printf("\n");
-    rl_replace_line("", 0);
+    // rl_replace_line("", 0);
     rl_on_new_line();
     rl_redisplay();
 }

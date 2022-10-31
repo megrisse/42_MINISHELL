@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/30 18:31:31 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:10:19 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int is_word(char *str)
 
 int check_type(char *str)
 {
-    int i = 0;
     if (is_word(str) == SUCCESS)
         return (WORD);
     else if (str[0] == '|' && str[1] == 0)
@@ -191,7 +190,6 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 
 void	fct3(t_global *glb, char *str, char *ret, int **tab)
 {
-	int id = 0;
 	char c = str[(*tab[0])++];
 	
 	while (str[(*tab[0])] != 0 && str[*tab[0]] != c)
@@ -246,7 +244,8 @@ t_list *init_list(t_global *glb, t_list *head,  char *str)
     {
         temp = change_str(glb, cmnd[i++]);
         if (add_back_list(&head, new_list(temp)) != SUCCESS)
-            return (free_list(&head, head),NULL);//free
+            return (free(temp), free_list(&head, head), NULL);//free
+		free(temp);
     }
     ft_free(cmnd);
     return (head);

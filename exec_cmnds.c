@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:46:29 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/30 18:37:05 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:33:33 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char *remove_debut(char* s, int i)
 
 char **find_paths(t_envi **env)
 {
-	int i = 0;
 	int j = 1;
 	t_envi *temp = *env;
 	char **paths;
@@ -80,14 +79,21 @@ int other_fct(t_cmnd *cmnd, t_envi **env)
 			//absolut path : /bin/ls
 			j = execve(path_cmnd, cmnd->cmnd, cmnd->env);
 			if (j < 0)
-				return(printf("error f execve\n"), ft_free(paths), FAILDE);
+				return(printf("error f execve\n"), ft_free(paths), free(ptr), FAILDE);
 			return (free(ptr), ft_free(paths), SUCCESS);
 		}
 		free(path_cmnd);
 	}
-	return (free(ptr), FAILDE);
+	return (free(ptr), ft_free(paths), FAILDE);
 }
 
+
+void free_tcmnd(t_cmnd *cmnd)
+{
+	ft_free(cmnd->cmnd);
+	ft_free(cmnd->env);
+	free(cmnd);
+}
 
 int	exec_cmnd(t_list *cmnd_list, t_envi *env)
 {
@@ -103,8 +109,9 @@ int	exec_cmnd(t_list *cmnd_list, t_envi *env)
 	if (builtin_fct(cmnd, &env) != SUCCESS)
 	{
 		if (other_fct(cmnd, &env) != SUCCESS)
-			return (ft_free(cmnd->cmnd), ft_putstr_fd(2, cmnd->cmnd[0]), write(2 ,": command not found\n", 21), exit(127), FAILDE);//exit bwhd int
+			return (ft_putstr_fd(2, cmnd->cmnd[0]), free_tcmnd(cmnd), write(2 ,": command not found\n", 21), exit(127), FAILDE);//exit bwhd int
+		printf("i m here\n");
 	}
-	return (ft_free(cmnd->cmnd), exit(0), SUCCESS);
+	return (free_tcmnd(cmnd), exit(0), SUCCESS);
 }
 

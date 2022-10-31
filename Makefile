@@ -6,7 +6,7 @@
 #    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/10/30 17:44:33 by megrisse         ###   ########.fr        #
+#    Updated: 2022/10/31 13:14:10 by megrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ HEADER := mini.h
 
 CC := gcc
 
-CFLAGS += #-Wall -Werror -Wextra
+CFLAGS += -Wall -Werror -Wextra
 
 LDFLAGS += -lreadline
 

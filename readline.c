@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/30 18:40:24 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:24:58 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
 	char **str = ft_split(glb->cmnd, '|');
 	if (str == NULL)
 		return ;
-	int i = 0;
 	*left = init_list(glb, *left, str[total_pipes - pipe_num]);
 
 	if (str[total_pipes - pipe_num + 1] != NULL)
@@ -156,6 +155,7 @@ int shell(t_global *global)
 		global->cmnd_list = init_list(global, global->cmnd_list, line);
 		n_cmnd = nbr_mots(global->cmnd, '|');
 		ft_pipes(global, n_cmnd, NULL, 0);
+		//free_list(&global->cmnd_list, global->cmnd_list);
 		free(line);
 	}
 	return (SUCCESS);
