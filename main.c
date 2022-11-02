@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.c                                         :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/31 22:24:58 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/02 15:17:16 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,29 @@
 
 //protect all malloc in your minishell
 
+int	check_pipe(t_list *list, int t)
+{
+	t_list *temp;
+
+	temp = list;
+	while (t != 0 && temp->next != NULL)
+	{
+		if (temp->next->type == PIPE)
+			t--;
+		temp = temp->next;
+	}
+	if (t == 0 && temp->type == PIPE && temp->next == NULL)
+		return (FAILDE);
+	return (SUCCESS);
+}
 
 void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
 {
 	int total_pipes = nbr_mots(glb->cmnd, '|');
+	if (glb->cmnd_list->type == PIPE)
+		return ;
+	if (check_pipe(glb->cmnd_list, total_pipes) == FAILDE)
+		return ;
 	char **str = ft_split(glb->cmnd, '|');
 	if (str == NULL)
 		return ;
@@ -63,7 +82,7 @@ int close_fds(t_list *right, int *fd, int *old_fd, int key)
 	return (SUCCESS);
 }
 
-int exec_builting(t_list *cmnd_list, t_envi *env)
+int exec_builting(t_list *cmnd_list, t_global *glb)
 {
 	t_cmnd	*cmnd;
 	int		red_type = 0;
@@ -71,7 +90,7 @@ int exec_builting(t_list *cmnd_list, t_envi *env)
 	int		red_back = -1;
 	int		i = 0;
 
-	cmnd = initializ_cmnd(cmnd_list, env);
+	cmnd = initializ_cmnd(cmnd_list, glb->env);
 	red_type = type_red(cmnd_list);
 	if (red_type == R_OUT || red_type == DR_OUT)
 	{
@@ -83,10 +102,11 @@ int exec_builting(t_list *cmnd_list, t_envi *env)
 		old_fd = redirection_inp(name_red(cmnd_list), red_type);
 		red_back = STDIN_FILENO;
 	}
-	if (builtin_fct(cmnd, &env) != SUCCESS)
+	if (builtin_fct(cmnd, glb) != SUCCESS)
 		i = -1;
 	if (red_type != 0)
 		dup2(old_fd, red_back);
+	free_tcmnd(cmnd);
 	if (i == -1)
 		return (FAILDE);
 	return (SUCCESS);
@@ -101,10 +121,11 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 
 	init_parties(global, &left_cmnd, &right_cmnd, pipe_num);
 	if (left_cmnd == NULL)
-		return (1);
-	global->status = exec_builting(global->cmnd_list, global->env);
+		return (write(2, "Error Pipe\n", 11), FAILDE);
+	if (key == 0 && right_cmnd == NULL)
+		global->status = exec_builting(global->cmnd_list, global);
 	if (key == 0 && right_cmnd == NULL && global->status == SUCCESS)
-		return (SUCCESS);
+		return (free_list(&left_cmnd, left_cmnd), SUCCESS);
 	int	fd[2];
 	if (pipe(fd) < 0)
 		return (FAILDE);
@@ -114,20 +135,17 @@ int ft_pipes(t_global *global, int pipe_num, int *old_fd, int key)
 	if (pid == 0)
 	{
 		close_fds(right_cmnd, fd, old_fd, 0);
-		if (exec_cmnd(left_cmnd, global->env) != SUCCESS)
+		if (exec_cmnd(left_cmnd, global) != SUCCESS)
 			return (FAILDE);
-		return (SUCCESS);
+		return (free_list(&left_cmnd, left_cmnd), SUCCESS);
 	}
 	if (pid > 0)
 	{
 		close_fds(NULL, NULL, old_fd, 1);
 		wait(&global->status);
-		
 		unlink(".heredoc");
 		if (right_cmnd != NULL)
 			ft_pipes(global, --pipe_num, fd, 1);
-		else
-			return (SUCCESS);
 	}
 	free_list(&left_cmnd, left_cmnd);
 	if (right_cmnd != NULL)
@@ -145,7 +163,7 @@ int shell(t_global *global)
 		line = readline("Minishel => ");
 		//fct for exit ctrl-D
 		if (line == NULL)
-			exit(global->status);
+			ft_exit(global, 1);
 		j = ft_strlen(line);
 		if (j != 0)
 			add_history(line);
@@ -153,10 +171,12 @@ int shell(t_global *global)
 			continue ;
 		global->cmnd = line;
 		global->cmnd_list = init_list(global, global->cmnd_list, line);
+		if (global->cmnd_list == NULL)
+			continue ;
 		n_cmnd = nbr_mots(global->cmnd, '|');
-		ft_pipes(global, n_cmnd, NULL, 0);
-		//free_list(&global->cmnd_list, global->cmnd_list);
+		global->status = ft_pipes(global, n_cmnd, NULL, 0);
 		free(line);
+		free_list(&global->cmnd_list, global->cmnd_list);
 	}
 	return (SUCCESS);
 }

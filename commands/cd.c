@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/30 15:03:11 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:59:12 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 			return (ft_free(cmnd->cmnd), FAILDE);
 		}
 	}
-	change_var_value(*env, "OLDPWD", old_pwd);
-	change_var_value(*env, "PWD", ft_strdup(getcwd(pwd, 1024)));
+	change_var_value(*env, (char *)"OLDPWD", old_pwd);
+	change_var_value(*env, (char *)"PWD", ft_strdup(getcwd(pwd, 1024)));
 	return (SUCCESS);
 }

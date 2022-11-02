@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cmnd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:48:42 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/28 19:19:55 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/01 13:05:39 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char **init_cmnd_table(t_list *cmnd, int size)
 		temp = temp->next->next;
 	while (temp != NULL && temp->type == WORD)
 	{
-		comnd[i++] = temp->str;
+		comnd[i++] = ft_strdup(temp->str);
 		temp = temp->next;
 	}
 	comnd[i] = NULL;
@@ -38,7 +38,7 @@ char **init_env_table(t_envi *envi, int size)
 	int i = 0;
 	while (temp != NULL)
 	{
-		env[i++] = temp->env_x;
+		env[i++] = ft_strdup(temp->env_x);
 		temp = temp->next;
 	}
 	env[i] = NULL;

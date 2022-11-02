@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t_list.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/31 22:10:19 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/01 19:15:19 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ int fct2(t_global *glb, char *s, int *i)
 	len = ft_strlen(exit_s);
 	if (ft_strncmp(var_name, "?", 1) == SUCCESS)
 		return (free(var_name), free(exit_s), len);
+	else if (var_name[0] == 0)
+		return (free(var_name), free(exit_s), 1);
 	while (temp != NULL)
 	{
 		if (ft_strncmp(var_name, temp->var_name, ft_strlen(glb->env->var_name)) == SUCCESS)
@@ -177,6 +179,8 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 	char *var_name = nume_var(str, tab[0]);
 	if (ft_strncmp(exit_s, "?", 1) == SUCCESS)
 		fct5(ret, tab, exit_s);
+	else if (var_name[0] == 0)
+		fct5(ret, tab, "$");
 	while (temp != NULL)
 	{
 		if (ft_strncmp(var_name, temp->var_name, ft_strlen(glb->env->var_name)) == SUCCESS)
@@ -228,6 +232,18 @@ char *change_str(t_global *glb, char *str)
 	return (ret);
 }
 
+int check_list(t_list *list)
+{
+	t_list *temp = list;
+	while (temp != NULL)
+	{
+		if (temp->type != WORD && temp->type != PIPE && temp->next == NULL)
+		return (write(2, "syntax error near unexpected token `newline'\n", 45), FAILDE);
+		temp = temp->next;
+	}
+	return (SUCCESS);
+}
+
 t_list *init_list(t_global *glb, t_list *head,  char *str)
 {
     char	**cmnd;
@@ -239,15 +255,17 @@ t_list *init_list(t_global *glb, t_list *head,  char *str)
     head = NULL;
 		
 	if (cmnd == NULL)
-		return (printf("error quotes\n"), NULL);
+		return (printf("Error quotes\n"), NULL);
     while (cmnd != NULL && cmnd[i] != NULL)
     {
         temp = change_str(glb, cmnd[i++]);
         if (add_back_list(&head, new_list(temp)) != SUCCESS)
-            return (free(temp), free_list(&head, head), NULL);//free
+            return (ft_free(cmnd), free(temp), free_list(&head, head), write(2, "Error pipe\n", 11), NULL);//free
 		free(temp);
     }
     ft_free(cmnd);
+	if (check_list(head) != SUCCESS)
+		return (free (str), free_list(&head, head), NULL);
     return (head);
 }
 

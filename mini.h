@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/31 21:56:47 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/01 18:00:00 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL
+#ifndef MINISHELL_H
 
-#define MINISHELL
+#define MINISHELL_H
 
 #include <unistd.h>
 #include <stdio.h>
@@ -33,7 +33,6 @@
 
 # define WORD 10
 # define PIPE 11
-# define VAR 14
 # define R_INP 15
 # define R_OUT 16
 # define DR_INP 17
@@ -62,7 +61,7 @@ char    *name_var(char *env);
 void	add_front(t_envi **envi, t_envi *new_node);
 int		change_var_value(t_envi *env,char *name, char *value);
 
-
+t_envi	*find_var(t_envi *env, char *name);
 
 //-------------------------------------------------------//
 
@@ -105,14 +104,14 @@ char	*ft_itoa(int nbr);
 char	**find_paths(t_envi **env);
 char	*remove_debut(char* s, int i);
 int		other_fct(t_cmnd *cmnd, t_envi **env);
-int		exec_cmnd(t_list *cmnd_list, t_envi *env);
+int		exec_cmnd(t_list *cmnd_list, t_global *glb);
 
-int		builtin_fct(t_cmnd *cmnd, t_envi **env);
+int		builtin_fct(t_cmnd *cmnd, t_global *glb);
 
 void	ft_free(char **str);
 void 	free_tcmnd(t_cmnd *cmnd);
 int		ft_pwd(t_cmnd *cmnd, t_envi **env);
-int		ft_exit(t_cmnd *cmnd, t_envi **env);
+int		ft_exit(t_global *glb, int key);
 int		ft_cd(t_cmnd *cmnd, t_envi **env);
 int		ft_echo(t_cmnd *cmnd, t_envi **env);
 int		ft_env(t_cmnd *cmnd, t_envi **env);
@@ -141,10 +140,10 @@ void	handler(int sig);
 
 
 
-void print_l(t_list *head, char *str);
+void print_l(t_list **head, char *str);
 
 
 
 int	nbr_mots	(char *s, char c);
 
-#endif	//MINISHELL
+#endif	//MINISHELL_H

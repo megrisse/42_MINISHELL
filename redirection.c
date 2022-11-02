@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:39:55 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/31 22:22:49 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/01 15:33:21 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,12 @@ int type_red(t_list *cmnd)
 
 void	heredoc(char *file_name)
 {
-	unlink(".heredoc");
 	int fd = open(".heredoc", O_CREAT | O_RDWR, 0664);
 	char *line;
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (ft_strncmp(file_name, line, ft_strlen(file_name)) == 0)
+		if (ft_strncmp(file_name, line, ft_strlen(line)) == 0)
 			break ;
 		ft_putstr_fd(fd, line);
 		ft_putstr_fd(fd, "\n");

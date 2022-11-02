@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
+#    By: hameur <hameur@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/10/31 13:14:10 by megrisse         ###   ########.fr        #
+#    Updated: 2022/11/01 17:56:00 by hameur           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ CFLAGS += -Wall -Werror -Wextra
 
 LDFLAGS += -lreadline
 
-SRC :=	readline.c \
+SRC :=	main.c \
 		commands.c \
 		env.c \
 		env_utils.c \
@@ -44,7 +44,7 @@ all :	$(NAME)
 		@echo "Making Minishell"
 
 $(NAME) :	$(OBJS)
-	$(CC)  $(LDFLAGS) $(OBJS) -o $(NAME) 
+	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
 
 %.o : %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@ 

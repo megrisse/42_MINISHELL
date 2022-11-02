@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
-/*   Updated: 2022/10/31 21:51:06 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/02 16:05:22 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,18 @@ t_envi	*find_var(t_envi *env, char *name)
 	return (NULL);
 }
 
-int	change_var_value(t_envi *env, char *name, char *value)
+int	change_var_value(t_envi *temp, char *name, char *value)
 {
-	t_envi	*temp;
+	char *ptr;
 
-	temp = find_var(env, name);
-	if (temp == NULL)
-		return (FAILDE);
-	free(temp->env_x);
-	temp->env_x = ft_strlcat(temp->var_name, ft_strlcat("=", value));
-	temp->var_value = value;
-	return (SUCCESS);
+	//free(temp->env_x);
+	free(temp->var_name);
+	free(temp->var_value);
+	ptr = ft_strlcat((char *)"=", value);
+	temp->env_x = ft_strlcat(name, ptr);
+	temp->var_value = ft_strdup(value);
+	temp->var_name = ft_strdup(name);
+	return (free(ptr), SUCCESS);
 }
 
 int	check_var(char *cmnd)
@@ -53,16 +54,20 @@ int	check_var(char *cmnd)
 
 int	ft_export(t_cmnd *cmnd, t_envi **env)
 {
-	char *name;
+	char 	*name;
+	char 	*value;
+	t_envi	*temp;
 	
-	name =  name_var(cmnd->cmnd[1]);
 	if (check_var(cmnd->cmnd[1]) != SUCCESS)
 		return (FAILDE);
-	if (find_var(*env, name) != NULL)
+	name =  name_var(cmnd->cmnd[1]);
+	temp = find_var(*env, name);
+	if (temp != NULL)
 	{
-		change_var_value(*env, name, value_var(cmnd->cmnd[1]));
-		free(name);
-		return (SUCCESS);
+		free(temp->env_x);
+		value = value_var(cmnd->cmnd[1]);
+		change_var_value(temp, name, value);
+		return (free(name), free(value), SUCCESS);
 	}
 	add_back(env, new_node(cmnd->cmnd[1]));
 	return (free(name), SUCCESS);
