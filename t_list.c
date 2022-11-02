@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t_list.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/01 19:15:19 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/02 17:42:40 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,19 +128,19 @@ int fct2(t_global *glb, char *s, int *i)
 int fct(t_global *glb, char *str, int *id, char c)
 {
 	int i = 0;
-	int j = (*id) + 1;
+	// int j = (*id) + 1;
 
-	while (str[j] != 0 && str[j] != c)
+	while (str[(*id)] != 0 && str[(*id)] != c)
 	{
-		if (str[j] == '$' && c == DQUOTE)
-			i += fct2(glb, str, &j);
+		if (str[(*id)] == '$' && c == DQUOTE)
+			i += fct2(glb, str, id);
 		else
 		{
 			i++;
-			j++;
+			(*id)++;
 		}
 	}
-	(*id) = j;
+	// (*id) = j;
 	return (i);
 }
 
@@ -194,7 +194,7 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 
 void	fct3(t_global *glb, char *str, char *ret, int **tab)
 {
-	char c = str[(*tab[0])++];
+	char c = str[(*tab[0])];
 	
 	while (str[(*tab[0])] != 0 && str[*tab[0]] != c)
 	{
@@ -228,6 +228,7 @@ char *change_str(t_global *glb, char *str)
 		else
 			ret[j++] = str[i++];	
 	}
+	ret[j] = 0;
 	free(tab);
 	return (ret);
 }
