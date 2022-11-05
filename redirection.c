@@ -6,7 +6,7 @@
 /*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:39:55 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/01 15:33:21 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/03 23:30:25 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int type_red(t_list *cmnd)
 
 void	heredoc(char *file_name)
 {
+	if (access(".heredoc", F_OK) == SUCCESS)
+		return ;
 	int fd = open(".heredoc", O_CREAT | O_RDWR, 0664);
 	char *line;
 	while (1)
@@ -34,7 +36,10 @@ void	heredoc(char *file_name)
 			break ;
 		ft_putstr_fd(fd, line);
 		ft_putstr_fd(fd, "\n");
+		free(line);
 	}
+	free(line);
+	ft_putstr_fd(fd, "\0");
 	close(fd);
 }
 
@@ -46,14 +51,13 @@ int redirection_inp(char *file_name, int red_type)
 	if (red_type == DR_INP)
 	{
 		heredoc(file_name);
-		fd = open(".heredoc", O_RDONLY);
+		fd = open(".heredoc", O_RDWR, 0664);
 	}
 	if (red_type == R_INP)
 		fd = open(file_name, O_RDONLY);
 	fd_cpy = dup(STDIN_FILENO);
 	if (fd_cpy < 0 || fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 		return (FAILDE);
-	close(fd);
 	return (fd_cpy);
 }
 

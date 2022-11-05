@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 16:47:10 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/02 16:06:14 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/04 00:31:35 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	free_env(t_envi **env)
 		*env = temp->next;
 		free(temp->env_x);
 		free(temp->var_name);
+		free(temp->var_value);
 		free(temp);
 		temp = *env;
 	}
@@ -81,8 +82,9 @@ void	delete_node_env(t_envi **env, int i)
 		return ;
 	ptr = temp->next;
 	temp->next = ptr->next;
-	free(temp->env_x);
-	free(temp->var_name);
-	free(temp);
+	ptr->next = NULL;
+	free(ptr->env_x);
+	free(ptr->var_name);
+	free(ptr->var_value);
 	free(ptr);
 }

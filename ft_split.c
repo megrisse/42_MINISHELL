@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 17:42:01 by hameur            #+#    #+#             */
-/*   Updated: 2022/10/30 18:34:34 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/03 22:20:33 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ static char	**ft_remplissage(char *s, char **copy, char c)
 		copy[i++] = ft_copy(s, start, end);
 	copy[i] = NULL;
 	i = 0;
-	// while (copy[i] != 0)
-	// 	printf("copy = %s\n", copy[i++]);
 	return (copy);
 }
 

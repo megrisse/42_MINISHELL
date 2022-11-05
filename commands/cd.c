@@ -6,7 +6,7 @@
 /*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/01 12:59:12 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/03 22:49:51 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,42 @@ char *check_flags(t_envi *env, char *flag)
 	char *old_pwd;
 	
 	if (flag == NULL)
-		old_pwd = get_var(env, "HOME");
-	else if (ft_strncmp(flag , "-", 1) == SUCCESS)
 	{
-		old_pwd = get_var(env, "OLDPWD");
-		printf("~%s\n", old_pwd);
+		old_pwd = get_var(env, (char *)"HOME");
+		if (old_pwd == NULL)
+			write(2, "cd: HOME not set\n", 17);
 	}
-	else if (ft_strncmp(flag , "~", 1) == SUCCESS)
-		old_pwd = get_var(env, "HOME");
+	else if (ft_strncmp(flag , (char *)"-", 1) == SUCCESS)
+	{
+		old_pwd = get_var(env, (char *)"OLDPWD");
+		if (old_pwd != NULL)
+			printf("~%s\n", old_pwd);
+		else
+			write(2, "cd: OLDPWD not set\n", 20);
+	}
+	else if (ft_strncmp(flag , (char *)"~", 1) == SUCCESS)
+	{
+		old_pwd = get_var(env, (char *)"HOME");
+		if (old_pwd == NULL)
+			write(2, "cd: HOME not set\n", 17);
+	}	
 	else
 		return (NULL);
-	chdir(old_pwd);
+	if (old_pwd != NULL)
+		chdir(old_pwd);
 	return (old_pwd);
+}
+
+int	is_flag(char *str)
+{
+	if (str == NULL)
+		return (SUCCESS);
+	else if (ft_strncmp(str, "-", 1) != SUCCESS)
+		return(SUCCESS);
+	else if (ft_strncmp(str, "~", 1) != SUCCESS)
+		return (SUCCESS);
+	return(FAILDE);
+		
 }
 
 int	ft_cd(t_cmnd *cmnd, t_envi **env)
@@ -58,8 +82,9 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 	{	
 		if (chdir(cmnd->cmnd[1]) != SUCCESS)
 		{
-			printf("cd: no such file or directory: %s\n", cmnd->cmnd[1]);
-			return (ft_free(cmnd->cmnd), FAILDE);
+			if (is_flag(cmnd->cmnd[1]) != SUCCESS)
+				printf("cd: no such file or directory: %s\n", cmnd->cmnd[1]);
+			return (FAILDE);
 		}
 	}
 	change_var_value(*env, (char *)"OLDPWD", old_pwd);

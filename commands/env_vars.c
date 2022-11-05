@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/02 16:05:22 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/03 17:35:45 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int ft_unset(t_cmnd *cmnd, t_envi **env)
 	int i = 0;
 	while (temp != NULL && i++ >= 0)
 	{
-		if (ft_strncmp(temp->env_x, cmnd->cmnd[1], ft_strlen(cmnd->cmnd[1] - 1)) == SUCCESS)
+		if (ft_strncmp(temp->var_name, cmnd->cmnd[1], ft_strlen(temp->var_name)) == SUCCESS)
 		{
 			delete_node_env(env, i - 1);
 			break ;

@@ -6,7 +6,7 @@
 /*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:36:27 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/01 18:37:50 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/04 00:37:16 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 int	ft_pwd(t_cmnd *cmnd, t_envi **env)
 {
-	t_envi	*temp;
-
+	char pwd[1024];
+	
 	(void)cmnd;
-	temp = find_var(*env, (char *)"PWD");
-	printf("%s\n", temp->var_value);
+	(void)env;
+	getcwd(pwd, 1024);
+	printf("%s\n", pwd);
 	return (SUCCESS);
 }
 
@@ -56,7 +57,7 @@ char	*cherch_var(char *var, t_envi *env)
 			return (env->env_x + i + 1);
 		env = env->next;
 	}
-	return (NULL);
+	return ((char *)"");
 }
 
 int	ft_echo(t_cmnd *cmnd, t_envi **env)
@@ -83,15 +84,14 @@ int	ft_echo(t_cmnd *cmnd, t_envi **env)
 	return (SUCCESS);
 }
 
-int	ft_exit(t_global *glb, int key)
+int	ft_exit(t_global *glb)
 {
 	int	i;
 
 	i = glb->status;
+	unlink(".heredoc");
 	free_env(&glb->env);
-	free_list(&glb->cmnd_list, glb->cmnd_list);
 	free(glb);
-	if (key == 0)
-		printf("exit\n");
+	printf("exit\n");
 	exit(i);
 }
