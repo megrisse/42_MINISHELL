@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/11/05 20:03:45 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/05 21:44:46 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,13 +276,13 @@ int	ft_pipes(t_global *glb)
 	
 	i = 0;
 	cmnd = ft_split(glb->cmnd, '|');
-	// if (nbr_mots(glb->cmnd, '|') == 1)
-	// {
-	// 	current = init_list(glb, current, cmnd[0]);
-	// 	if (exec_builting(current, glb) == SUCCESS)
-	// 		return (free_list(&current, current), SUCCESS);
-	// 	free_list(&current, current);
-	// }
+	if (nbr_mots(glb->cmnd, '|') == 1)
+	{
+		current = init_list(glb, current, cmnd[0]);
+		if (exec_builting(current, glb) == SUCCESS)
+			return (free_list(&current, current), ft_free(cmnd), SUCCESS);
+		free_list(&current, current);
+	}
 	while (i < nbr_mots(glb->cmnd, '|'))
 	{
 		current = init_list(glb, current, cmnd[i]);

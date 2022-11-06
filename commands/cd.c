@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/03 22:49:51 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/06 14:02:14 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_var(t_envi *env, char *str)
 
 char *check_flags(t_envi *env, char *flag)
 {
-	char *old_pwd;
+	char	*old_pwd;
 	
 	if (flag == NULL)
 	{
@@ -84,10 +84,10 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 		{
 			if (is_flag(cmnd->cmnd[1]) != SUCCESS)
 				printf("cd: no such file or directory: %s\n", cmnd->cmnd[1]);
-			return (FAILDE);
+			return (free(o_pwd), FAILDE);
 		}
 	}
 	change_var_value(*env, (char *)"OLDPWD", old_pwd);
 	change_var_value(*env, (char *)"PWD", ft_strdup(getcwd(pwd, 1024)));
-	return (SUCCESS);
+	return (free(o_pwd), SUCCESS);
 }

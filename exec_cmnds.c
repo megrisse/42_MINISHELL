@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:46:29 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/05 18:10:19 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/05 23:42:34 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,12 @@ char **find_paths(t_envi **env)
 	return (paths);
 }
 
-
+int is_file(char *str)
+{
+	if (ft_strncmp(str, "./", 1) == SUCCESS)
+		return (printf("***********\n"), FAILDE);
+	return (SUCCESS);
+}
 
 int other_fct(t_cmnd *cmnd, t_envi **env)
 {
@@ -75,6 +80,8 @@ int other_fct(t_cmnd *cmnd, t_envi **env)
 		return (FAILDE);
 	if (access(cmnd->cmnd[0], X_OK) == SUCCESS)
 		return (execve(cmnd->cmnd[0], cmnd->cmnd, cmnd->env));
+	if (is_file(cmnd->cmnd[0]) != SUCCESS)
+		return (FAILDE);
 	char **paths = find_paths(env);
 	if (paths == NULL)
 		return (FAILDE);
