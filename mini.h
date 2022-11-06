@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/05 19:07:54 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/06 17:21:53 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int		ft_unset(t_cmnd *cmnd, t_envi **env);
 
 
 void	free_list(t_list **root, t_list *node);
-t_list	*init_list(t_global *glb, t_list *head, char *str);
+t_list	*init_list(t_global *glb, t_list *head, char *str, int key);
 
 //___________redirection_fcts______________
 int		redirection_out(char *file_name, int red_type);

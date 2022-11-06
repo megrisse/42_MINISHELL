@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/06 14:02:14 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/06 16:19:50 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 		{
 			if (is_flag(cmnd->cmnd[1]) != SUCCESS)
 				printf("cd: no such file or directory: %s\n", cmnd->cmnd[1]);
-			return (free(o_pwd), FAILDE);
+			return (free(o_pwd), free(old_pwd), FAILDE);
 		}
 	}
 	change_var_value(*env, (char *)"OLDPWD", old_pwd);
-	change_var_value(*env, (char *)"PWD", ft_strdup(getcwd(pwd, 1024)));
-	return (free(o_pwd), SUCCESS);
+	change_var_value(*env, (char *)"PWD", pwd);
+	return (free(o_pwd), free(old_pwd), SUCCESS);
 }

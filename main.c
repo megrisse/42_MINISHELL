@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/11/05 21:44:46 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/06 18:03:27 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,23 @@ int	check_pipe(t_list *list, int t)
 	return (SUCCESS);
 }
 
-void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
-{
-	int total_pipes = nbr_mots(glb->cmnd, '|');
-	if (glb->cmnd_list->type == PIPE)
-		return ;
-	if (check_pipe(glb->cmnd_list, total_pipes) == FAILDE)
-		return ;
-	char **str = ft_split(glb->cmnd, '|');
-	if (str == NULL)
-		return ;
-	*left = init_list(glb, *left, str[total_pipes - pipe_num]);
-	if (str[total_pipes - pipe_num + 1] != NULL)
-		*right = init_list(glb, *right, str[total_pipes - pipe_num + 1]);
-	else
-		right = NULL;
-	ft_free(str);
-}
+// void init_parties(t_global *glb, t_list **left, t_list **right, int pipe_num)
+// {
+// 	int total_pipes = nbr_mots(glb->cmnd, '|');
+// 	if (glb->cmnd_list->type == PIPE)
+// 		return ;
+// 	if (check_pipe(glb->cmnd_list, total_pipes) == FAILDE)
+// 		return ;
+// 	char **str = ft_split(glb->cmnd, '|');
+// 	if (str == NULL)
+// 		return ;
+// 	*left = init_list(glb, *left, str[total_pipes - pipe_num]);
+// 	if (str[total_pipes - pipe_num + 1] != NULL)
+// 		*right = init_list(glb, *right, str[total_pipes - pipe_num + 1]);
+// 	else
+// 		right = NULL;
+// 	ft_free(str);
+// }
 
 
 
@@ -263,9 +263,10 @@ int exec_builting(t_list *cmnd_list, t_global *glb)
 // 	return (SUCCESS);
 // }
 
+void print_l();
 
 
-int	ft_pipes(t_global *glb)
+int	ft_pipes(t_global *glb, int n_cmnd)
 {
 	t_list	*current = NULL;
 	char	**cmnd;
@@ -276,22 +277,23 @@ int	ft_pipes(t_global *glb)
 	
 	i = 0;
 	cmnd = ft_split(glb->cmnd, '|');
-	if (nbr_mots(glb->cmnd, '|') == 1)
+	int j = 0;
+	while (cmnd[j++] != NULL);
+	if (n_cmnd == 1)
 	{
-		current = init_list(glb, current, cmnd[0]);
+		current = init_list(glb, current, cmnd[0], 1);
 		if (exec_builting(current, glb) == SUCCESS)
 			return (free_list(&current, current), ft_free(cmnd), SUCCESS);
 		free_list(&current, current);
 	}
-	while (i < nbr_mots(glb->cmnd, '|'))
+	while (i < n_cmnd)
 	{
-		current = init_list(glb, current, cmnd[i]);
+		current = init_list(glb, current, cmnd[i], 1);
 		glb->p_in = lastfd;
 		if (cmnd[i + 1])
 		{
 			if (pipe(fd) != SUCCESS)
 				return (FAILDE);
-			// glb->p_in = fd[0];
 			glb->p_out = fd[1];
 		}
 		if (pid > 0)
@@ -313,7 +315,6 @@ int	ft_pipes(t_global *glb)
 		fd[1] = -1;
 		glb->p_out = -1;
 		free_list(&current, current);
-		// free_list(&current, current);
 	}
 	while (waitpid(-1, &glb->status, 0) > 0);
 	close(lastfd);
@@ -336,11 +337,11 @@ int shell(t_global *global)
 		else
 			continue ;
 		global->cmnd = line;
-		global->cmnd_list = init_list(global, global->cmnd_list, line);
+		global->cmnd_list = init_list(global, global->cmnd_list, line, 0);
 		if (global->cmnd_list == NULL)
 			continue ;
 		n_cmnd = nbr_mots(global->cmnd, '|');
-		global->status = ft_pipes(global);
+		global->status = ft_pipes(global, n_cmnd);
 		free(line);
 		free_list(&global->cmnd_list, global->cmnd_list);
 	}

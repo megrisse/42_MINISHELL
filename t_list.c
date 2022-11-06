@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/05 19:09:47 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/06 17:48:29 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ int is_word(char *str)
     return (SUCCESS);
 }
 
-int check_type(char *str)
+int check_type(char *str, int key)
 {
-    if (is_word(str) == SUCCESS)
+	if (key == 1)
+		return (WORD);
+    else if (key == 0 && is_word(str) == SUCCESS)
         return (WORD);
     else if (str[0] == '|' && str[1] == 0)
         return (PIPE);
@@ -53,15 +55,19 @@ int check_type(char *str)
     return (FAILDE);
 }
 
-t_list *new_list(char *str)
+t_list *new_list(char *str, int key, int quote)
 {
     t_list  *node;
 
     node = (t_list *)malloc(sizeof(t_list));
     if (!node)
         return (NULL);
+	
     node->str = ft_strdup(str);
-    node->type = check_type(str);
+	if (key == 0)
+    	node->type = check_type(str, quote);
+	else
+		node->type = WORD;
     if (node->type == FAILDE)
         return (NULL);
     node->next = NULL;
@@ -245,7 +251,17 @@ int check_list(t_list *list)
 	return (SUCCESS);
 }
 
-t_list *init_list(t_global *glb, t_list *head,  char *str)
+int check_quotes(char *str)
+{
+	int i = 0;
+	while (str[i] != 0 && str[i] != DQUOTE && str[i] != SQUOTE)
+		i++;
+	if (str[i] == DQUOTE || str[i] == SQUOTE)
+		return (1);
+	return (0);
+}
+
+t_list *init_list(t_global *glb, t_list *head, char *str, int key)
 {
     char	**cmnd;
     char	*temp;
@@ -260,7 +276,8 @@ t_list *init_list(t_global *glb, t_list *head,  char *str)
     while (cmnd != NULL && cmnd[i] != NULL)
     {
         temp = change_str(glb, cmnd[i++]);
-        if (add_back_list(&head, new_list(temp)) != SUCCESS)
+		
+        if (add_back_list(&head, new_list(temp, key, check_quotes(cmnd[i - 1]))) != SUCCESS)
             return (ft_free(cmnd), free(temp), free_list(&head, head), write(2, "Error pipe\n", 11), NULL);//free
 		free(temp);
     }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 16:47:10 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/04 00:31:35 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/06 15:53:45 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ char	*value_var(char *env)
 	i = 0;
 	while (env[i] != 0 && env[i] != '=')
 		i++;
-	return (ft_strdup(env + i + 1));
+		char *ptr = env + i + 1;
+	return (ft_strdup(ptr));
 }
 
 t_envi	*init_envi(char **env)
