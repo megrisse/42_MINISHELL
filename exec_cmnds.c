@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:46:29 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 18:57:25 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 23:52:30 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,6 @@ char	**find_paths(t_envi **env)
 	j = 0;
 	free(str);
 	return (paths);
-}
-
-int	is_file(char *str)
-{
-	if (ft_strncmp(str, "./", 1) == SUCCESS)
-		return (FAILDE);
-	return (SUCCESS);
 }
 
 int	other_fct(t_cmnd *cmnd, t_envi **env)

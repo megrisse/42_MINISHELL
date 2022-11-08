@@ -6,7 +6,7 @@
 #    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/11/08 01:40:11 by megrisse         ###   ########.fr        #
+#    Updated: 2022/11/09 00:29:54 by megrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,22 +22,26 @@ CFLAGS += -Wall -Werror -Wextra
 
 LDFLAGS += -lreadline
 
-SRC :=	main.c \
+SRC :=	env.c \
+		main.c \
+		utils.c \
+		pipe.c \
+		t_list.c \
+		signals.c \
+		ft_itoa.c \
 		commands.c \
-		env.c \
+		ft_split.c \
+		init_cmnd.c \
 		env_utils.c \
 		exec_cmnds.c \
-		ft_split.c \
-		ft_itoa.c \
-		t_list.c \
-		utils.c \
 		redirection.c\
-		init_cmnd.c \
-		commands/cd.c \
-		commands/env_vars.c \
-		signals.c \
 		exec_built.c \
-
+		commands/cd.c \
+		t_list_utils.c \
+		t_list_utils1.c \
+		t_list_utils2.c \
+		commands/env_vars.c \
+		commands/env_tools.c \
 
 OBJS := $(SRC:.c=.o)
 

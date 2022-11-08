@@ -6,18 +6,21 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:48:42 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 01:30:01 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 23:40:00 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-char **init_cmnd_table(t_list *cmnd, int size)
+char	**init_cmnd_table(t_list *cmnd, int size)
 {
-	char **comnd;
-	t_list *temp = cmnd;
-	int i = 0;
+	char	**comnd;
+	t_list	*temp;
+	int		i;
+
+	temp = cmnd;
 	comnd = (char **)malloc(sizeof(char *) * size);
+	i = 0;
 	if (!comnd)
 		return (NULL);
 	if (temp->type != WORD)
@@ -31,14 +34,17 @@ char **init_cmnd_table(t_list *cmnd, int size)
 	return (comnd);
 }
 
-char **init_env_table(t_envi *envi, int size)
+char	**init_env_table(t_envi *envi, int size)
 {
-	t_envi *temp = envi;
-	char **env;
+	t_envi	*temp;
+	char	**env;
+	int		i;
+
+	temp = envi;
 	env = (char **)malloc(sizeof(char *) * size);
 	if (!env)
 		return (NULL);
-	int i = 0;
+	i = 0;
 	while (temp != NULL)
 	{
 		env[i++] = ft_strdup(temp->env_x);
@@ -48,12 +54,12 @@ char **init_env_table(t_envi *envi, int size)
 	return (env);
 }
 
-t_cmnd *initializ_cmnd(t_list *cmnd_list, t_envi *env)
+t_cmnd	*initializ_cmnd(t_list *cmnd_list, t_envi *env)
 {
-	t_cmnd *cmnd;
-	t_list *temp;
-	int i;
-	
+	t_cmnd	*cmnd;
+	t_list	*temp;
+	int		i;
+
 	cmnd = (t_cmnd *)malloc(sizeof(t_cmnd));
 	if (!cmnd)
 		return (NULL);
@@ -66,7 +72,6 @@ t_cmnd *initializ_cmnd(t_list *cmnd_list, t_envi *env)
 	cmnd->cmnd = init_cmnd_table(cmnd_list, i + 1);
 	cmnd->env = init_env_table(env, size_envi(env) + 1);
 	return (cmnd);
-
 }
 
 void	free_tcmnd(t_cmnd *cmnd)
@@ -78,4 +83,3 @@ void	free_tcmnd(t_cmnd *cmnd)
 	if (cmnd != NULL)
 		free(cmnd);
 }
-

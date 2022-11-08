@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 02:32:17 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/09 00:01:42 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_var(t_envi *env, char *str)
 {
-	t_envi *temp;
+	t_envi	*temp;
 
 	temp = env;
 	while (temp != NULL)
@@ -26,17 +26,17 @@ char	*get_var(t_envi *env, char *str)
 	return (NULL);
 }
 
-char *check_flags(t_envi *env, char *flag)
+char	*check_flags(t_envi *env, char *flag)
 {
 	char	*old_pwd;
-	
+
 	if (flag == NULL)
 	{
 		old_pwd = get_var(env, (char *)"HOME");
 		if (old_pwd == NULL)
 			ft_putstr_fd(2, "cd: HOME not set\n");
 	}
-	else if (ft_strncmp(flag , (char *)"-", 1) == SUCCESS)
+	else if (ft_strncmp(flag, (char *)"-", 1) == SUCCESS)
 	{
 		old_pwd = get_var(env, (char *)"OLDPWD");
 		if (old_pwd != NULL)
@@ -44,7 +44,7 @@ char *check_flags(t_envi *env, char *flag)
 		else
 			ft_putstr_fd(2, "cd: OLDPWD not set\n");
 	}
-	else if (ft_strncmp(flag , (char *)"~", 1) == SUCCESS)
+	else if (ft_strncmp(flag, (char *)"~", 1) == SUCCESS)
 	{
 		old_pwd = get_var(env, (char *)"HOME");
 		if (old_pwd == NULL)
@@ -62,16 +62,16 @@ int	is_flag(char *str)
 	if (str == NULL)
 		return (SUCCESS);
 	else if (ft_strncmp(str, "-", 1) != SUCCESS)
-		return(SUCCESS);
+		return (SUCCESS);
 	else if (ft_strncmp(str, "~", 1) != SUCCESS)
 		return (SUCCESS);
-	return(FAILDE);
+	return (FAILDE);
 }
 
 int	ft_cd(t_cmnd *cmnd, t_envi **env)
 {
-	char 	*old_pwd;
-	char 	*o_pwd;
+	char	*old_pwd;
+	char	*o_pwd;
 	char	pwd[1024];
 
 	getcwd(pwd, 1024);
