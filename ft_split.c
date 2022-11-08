@@ -6,7 +6,7 @@
 /*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 17:42:01 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/03 22:20:33 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/07 12:31:31 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ char *ft_copy(char *str, int start, int end)
 	int	i = 0;
 	int j = start;
 	ret = (char *)malloc((end - start + 1) * sizeof(char));
+	if (!ret)
+		return (ret);
 	while (j < end)
 		ret[i++] = str[j++];
 	ret[i] = 0;

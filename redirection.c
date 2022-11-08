@@ -6,7 +6,7 @@
 /*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:39:55 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/03 23:30:25 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/07 17:21:10 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,16 @@ int redirection_out(char *file_name, int red_type)
 char *name_red(t_list *cmnd_list)
 {
 	t_list *temp = cmnd_list;
+	int i = 0;
 
 	while (temp != NULL && temp->type == WORD)
 		temp = temp->next;
+	if (temp != NULL && temp->type != PIPE && temp->type != WORD)
+	{
+		while (temp->str[i] != 0 && (temp->str[i] == '>' || temp->str[i] == '<'))
+			i++;
+		if (temp->str[i] != 0)
+			return (temp->str + i);
+	}
 	return (temp->next->str);
 }

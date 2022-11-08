@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 22:44:38 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/06 17:21:53 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 20:00:25 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 # define R_OUT 16
 # define DR_INP 17
 # define DR_OUT 18
+
+int x;
 
 
 //_____________________ -Env-Fcts- _____________________//
@@ -110,6 +112,7 @@ int		other_fct(t_cmnd *cmnd, t_envi **env);
 int		exec_cmnd(t_list *cmnd_list, t_global *glb);
 
 int		builtin_fct(t_cmnd *cmnd, t_global *glb);
+int		exec_builting(t_list *cmnd_list, t_global *glb);
 
 void	ft_free(char **str);
 void 	free_tcmnd(t_cmnd *cmnd);
@@ -133,17 +136,16 @@ void	heredoc(char *file_name);
 int		type_red(t_list *cmnd);
 
 
-
+int check_quotes(char *str);
 
 t_cmnd	*initializ_cmnd(t_list *cmnd_list, t_envi *env);
 char	**init_env_table(t_envi *envi, int size);
 char	**init_cmnd_table(t_list *cmnd, int size);
-void    handler_sig(t_global *glb);
+void    handler_sig(t_global *glb, int i);
 void	handler(int sig);
 
 
 
-// void print_l(t_list **head, char *str);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/06 16:13:51 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 18:28:09 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_envi	*find_var(t_envi *env, char *name)
 int	change_var_value(t_envi *temp, char *name, char *value)
 {
 	char *ptr;
-
+	if (temp == NULL)
+		return (FAILDE);
 	free(temp->env_x);
 	free(temp->var_name);
 	free(temp->var_value);
@@ -52,14 +53,25 @@ int	check_var(char *cmnd)
 	return (SUCCESS);
 }
 
+void	print_ex(t_envi *env)
+{
+	while (env != NULL)
+	{
+		printf("declare -x %s\n", env->env_x);
+		env = env->next;
+	}
+}
+
 int	ft_export(t_cmnd *cmnd, t_envi **env)
 {
 	char 	*name;
 	char 	*value;
 	t_envi	*temp;
-	int i = 1;
-	// int j = 0;
-	
+	int i;
+
+	i = 1;
+	if (cmnd->cmnd[1] == NULL)
+		return (print_ex(*env), SUCCESS);
 	while (cmnd->cmnd[i])
 	{
 		if (check_var(cmnd->cmnd[i]) != SUCCESS)
@@ -71,7 +83,8 @@ int	ft_export(t_cmnd *cmnd, t_envi **env)
 			value = value_var(cmnd->cmnd[i++]);
 			change_var_value(temp, name, value);
 			free(name);
-			free(value);
+			if (value != NULL)
+				free(value);
 			continue ;
 		}
 		add_back(env, new_node(cmnd->cmnd[i++]));

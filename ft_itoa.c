@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 21:31:42 by megrisse          #+#    #+#             */
-/*   Updated: 2022/10/29 21:31:58 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:31:12 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ char	*ft_itoa(int nbr)
 
 	len = get_len(nbr);
 	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
 	result[len] = '\0';
 
 	if (nbr < 0)

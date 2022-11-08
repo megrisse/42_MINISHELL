@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:36:27 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/04 00:37:16 by hameur           ###   ########.fr       */
+/*   Updated: 2022/11/08 18:26:53 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_pwd(t_cmnd *cmnd, t_envi **env)
 {
-	char pwd[1024];
-	
+	char	pwd[1024];
+
 	(void)cmnd;
 	(void)env;
 	getcwd(pwd, 1024);
@@ -31,33 +31,27 @@ int	ft_env(t_cmnd *cmnd, t_envi **env)
 	temp = *env;
 	while (temp != NULL)
 	{
-		printf("%s=%s\n", temp->var_name, temp->var_value);
+		if (temp->var_value != NULL)
+			printf("%s=%s\n", temp->var_name, temp->var_value);
 		temp = temp->next;
 	}
 	return (SUCCESS);
 }
 
-int	print_var(char *var)
-{
-	if (var[0] == '$')
-		return (SUCCESS);
-	return (FAILDE);
-}
-
-char	*cherch_var(char *var, t_envi *env)
+int	echo_flag(char *str)
 {
 	int	i;
 
-	while (env != NULL)
-	{
-		i = 0;
-		while (var[i] != 0 && env->env_x[i] == var[i])
-			i++;
-		if (var[i] == 0)
-			return (env->env_x + i + 1);
-		env = env->next;
-	}
-	return ((char *)"");
+	i = 0;
+	if (str[i] == '-')
+		i++;
+	else
+		return (FAILDE);
+	while (str[i] != 0 && str[i] == 'n')
+		i++;
+	if (str[i] != 0)
+		return (FAILDE);
+	return (SUCCESS);
 }
 
 int	ft_echo(t_cmnd *cmnd, t_envi **env)
@@ -67,15 +61,11 @@ int	ft_echo(t_cmnd *cmnd, t_envi **env)
 
 	i = 0;
 	key = 0;
-	if (ft_strncmp(cmnd->cmnd[1], (char *)"-n", 2) == SUCCESS)
-	{
-		i++;
-		key++;
-	}
+	(void)env;
 	while (cmnd->cmnd[++i] != NULL)
 	{
-		if (print_var(cmnd->cmnd[i]) == SUCCESS)
-			printf("%s ", cherch_var(cmnd->cmnd[i] + 1, *env));
+		if (echo_flag(cmnd->cmnd[i]) == SUCCESS)
+			key = 1;
 		else
 			printf("%s ", cmnd->cmnd[i]);
 	}

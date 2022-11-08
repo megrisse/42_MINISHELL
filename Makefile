@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hameur <hameur@student.42.fr>              +#+  +:+       +#+         #
+#    By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/21 18:05:22 by hmeur             #+#    #+#              #
-#    Updated: 2022/11/01 17:56:00 by hameur           ###   ########.fr        #
+#    Updated: 2022/11/08 01:40:11 by megrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC :=	main.c \
 		commands/cd.c \
 		commands/env_vars.c \
 		signals.c \
+		exec_built.c \
 
 
 OBJS := $(SRC:.c=.o)

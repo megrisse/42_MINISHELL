@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 16:48:06 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/02 16:06:25 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/07 12:30:38 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_envi	*new_node(char *env_x)
 
 	node = (t_envi *)malloc(sizeof(t_envi));
 	if (!node)
-		return (free (node), NULL);
+		return (NULL);
 	node->env_x = ft_strdup(env_x);
 	node->var_name = name_var(env_x);
 	node->var_value = value_var(env_x);

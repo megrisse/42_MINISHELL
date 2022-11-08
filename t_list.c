@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t_list.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/06 17:48:29 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/07 17:23:35 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ int check_type(char *str, int key)
         return (WORD);
     else if (str[0] == '|' && str[1] == 0)
         return (PIPE);
-    else if (str[0] == '>' && str[1] == 0)
+    else if (str[0] == '>' && str[1] != '>')
         return (R_OUT);
-    else if (str[0] == '<' && str [1] == 0)
+    else if (str[0] == '<' && str [1] != '<')
         return(R_INP);
-    else if (str[0] == '>' && str[1] == '>' && str[2] == 0)
+    else if (str[0] == '>' && str[1] == '>')
         return (DR_OUT);
-    else if (str[0] == '<' && str[1] == '<' && str[2] == 0)
+    else if (str[0] == '<' && str[1] == '<')
         return (DR_INP);
     return (FAILDE);
 }
@@ -94,14 +94,16 @@ char *nume_var(char* str, int *id)
 	int i = 0;
 	int	j = (*id) + 1;
 	(*id)++;
-	while (str[*id] != 0 && str[*id] != '$' && str[*id] != ' ' && str[*id] != DQUOTE)
+	while (str[*id] != 0 && str[*id] != '$' && str[*id] != ' ' && str[*id] != DQUOTE && str[*id] != SQUOTE)
 	{
 		i++;
 		(*id)++;
 	}
 	char *ret  = (char *)malloc(sizeof(char) * (i + 1));
+	if (!ret)
+		return (NULL);
 	i = 0;
-	while (str[j] != 0 && str[j] != '$' && str[j] != ' ' && str[j] != DQUOTE)
+	while (str[j] != 0 && str[j] != '$' && str[j] != ' ' && str[j] != DQUOTE && str[j] != SQUOTE)
 		ret[i++] = str[j++];
 	ret[i] = 0;
 	return(ret);
@@ -134,7 +136,7 @@ int fct2(t_global *glb, char *s, int *i)
 int fct(t_global *glb, char *str, int *id, char c)
 {
 	int i = 0;
-	// int j = (*id) + 1;
+	(*id)++;
 
 	while (str[(*id)] != 0 && str[(*id)] != c)
 	{
@@ -171,6 +173,7 @@ int len_str(t_global *glb, char *str)
 void	fct5(char *str, int **tab, char *s)
 {
 	int	i = 0;
+
 	
 	while (s[i] != 0)
 		str[(*tab[1])++] = s[i++];
@@ -183,10 +186,10 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 
 	exit_s = ft_itoa(glb->status);
 	char *var_name = nume_var(str, tab[0]);
-	if (ft_strncmp(exit_s, (char *)"?", 1) == SUCCESS)
-		fct5(ret, tab, exit_s);
-	else if (var_name[0] == 0)
+	if (var_name[0] == 0)
 		fct5(ret, tab, (char *)"$");
+	else if (ft_strncmp(var_name, (char *)"?", 1) == SUCCESS)
+		fct5(ret, tab, exit_s);
 	while (temp != NULL)
 	{
 		if (ft_strncmp(var_name, temp->var_name, ft_strlen(glb->env->var_name)) == SUCCESS)
@@ -200,7 +203,7 @@ void	fct4(t_global *glb, char *str, char *ret, int **tab)
 
 void	fct3(t_global *glb, char *str, char *ret, int **tab)
 {
-	char c = str[(*tab[0])];
+	char c = str[(*tab[0])++];
 	
 	while (str[(*tab[0])] != 0 && str[*tab[0]] != c)
 	{
@@ -218,6 +221,8 @@ char *change_str(t_global *glb, char *str)
 	int i = 0;
 	int j = 0;
 	int	**tab = (int **)malloc(sizeof(int *) * 2);
+	if (!tab)
+		return (NULL);
 	tab[0] = &i;
 	tab[1] = &j;
 
@@ -244,8 +249,8 @@ int check_list(t_list *list)
 	t_list *temp = list;
 	while (temp != NULL)
 	{
-		if (temp->type != WORD && temp->type != PIPE && temp->next == NULL)
-		return (write(2, "syntax error near unexpected token `newline'\n", 45), FAILDE);
+		// if (temp->type != WORD && temp->type != PIPE && temp->next == NULL)
+		// return (ft_putstr_fd(2, "syntax error near unexpected token `newline'\n"), FAILDE);
 		temp = temp->next;
 	}
 	return (SUCCESS);
@@ -272,13 +277,13 @@ t_list *init_list(t_global *glb, t_list *head, char *str, int key)
     head = NULL;
 		
 	if (cmnd == NULL)
-		return (printf("Error quotes\n"), NULL);
+		return (ft_putstr_fd(2, (char *)"Error quotes\n"), NULL);
     while (cmnd != NULL && cmnd[i] != NULL)
     {
         temp = change_str(glb, cmnd[i++]);
 		
         if (add_back_list(&head, new_list(temp, key, check_quotes(cmnd[i - 1]))) != SUCCESS)
-            return (ft_free(cmnd), free(temp), free_list(&head, head), write(2, "Error pipe\n", 11), NULL);//free
+            return (ft_free(cmnd), free(temp), free_list(&head, head), ft_putstr_fd(2, "Error pipe\n"), NULL);//free
 		free(temp);
     }
     ft_free(cmnd);

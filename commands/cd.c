@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:23:51 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/06 16:19:50 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 02:32:17 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char *check_flags(t_envi *env, char *flag)
 	{
 		old_pwd = get_var(env, (char *)"HOME");
 		if (old_pwd == NULL)
-			write(2, "cd: HOME not set\n", 17);
+			ft_putstr_fd(2, "cd: HOME not set\n");
 	}
 	else if (ft_strncmp(flag , (char *)"-", 1) == SUCCESS)
 	{
@@ -42,13 +42,13 @@ char *check_flags(t_envi *env, char *flag)
 		if (old_pwd != NULL)
 			printf("~%s\n", old_pwd);
 		else
-			write(2, "cd: OLDPWD not set\n", 20);
+			ft_putstr_fd(2, "cd: OLDPWD not set\n");
 	}
 	else if (ft_strncmp(flag , (char *)"~", 1) == SUCCESS)
 	{
 		old_pwd = get_var(env, (char *)"HOME");
 		if (old_pwd == NULL)
-			write(2, "cd: HOME not set\n", 17);
+			ft_putstr_fd(2, "cd: HOME not set\n");
 	}	
 	else
 		return (NULL);
@@ -66,7 +66,6 @@ int	is_flag(char *str)
 	else if (ft_strncmp(str, "~", 1) != SUCCESS)
 		return (SUCCESS);
 	return(FAILDE);
-		
 }
 
 int	ft_cd(t_cmnd *cmnd, t_envi **env)
@@ -87,7 +86,8 @@ int	ft_cd(t_cmnd *cmnd, t_envi **env)
 			return (free(o_pwd), free(old_pwd), FAILDE);
 		}
 	}
-	change_var_value(*env, (char *)"OLDPWD", old_pwd);
-	change_var_value(*env, (char *)"PWD", pwd);
+	getcwd(pwd, 1024);
+	change_var_value(find_var(*env, "OLDPWD"), (char *)"OLDPWD", old_pwd);
+	change_var_value(find_var(*env, "PWD"), (char *)"PWD", pwd);
 	return (free(o_pwd), free(old_pwd), SUCCESS);
 }

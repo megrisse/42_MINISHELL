@@ -6,7 +6,7 @@
 /*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 16:47:10 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/06 15:53:45 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/08 00:57:42 by megrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	*name_var(char *env)
 	while (env[i] != 0 && env[i] != '=')
 		i++;
 	name = (char *)malloc(i + 1);
+	if (!name)
+		return (NULL);
 	while (env[++j] != '=')
 		name[j] = env[j];
 	name[j] = 0;
@@ -32,12 +34,13 @@ char	*name_var(char *env)
 
 char	*value_var(char *env)
 {
-	int	i;
+	char	*ptr;
+	int		i;
 
 	i = 0;
 	while (env[i] != 0 && env[i] != '=')
 		i++;
-		char *ptr = env + i + 1;
+	ptr = env + i + 1;
 	return (ft_strdup(ptr));
 }
 
