@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cmnd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:48:42 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 23:40:00 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/10 16:25:35 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,19 @@
 
 char	**init_cmnd_table(t_list *cmnd, int size)
 {
-	char	**comnd;
 	t_list	*temp;
+	char	**comnd;
 	int		i;
 
 	temp = cmnd;
-	comnd = (char **)malloc(sizeof(char *) * size);
 	i = 0;
+	comnd = (char **)malloc(sizeof(char *) * size);
 	if (!comnd)
 		return (NULL);
-	if (temp->type != WORD)
+	if (temp->type != WORD && check_red_name(temp->str) == FAILDE)
 		temp = temp->next->next;
+	else if (temp->type != WORD && check_red_name(temp->str) == SUCCESS)
+		temp = temp->next;
 	while (temp != NULL && temp->type == WORD)
 	{
 		comnd[i++] = ft_strdup(temp->str);
@@ -65,21 +67,15 @@ t_cmnd	*initializ_cmnd(t_list *cmnd_list, t_envi *env)
 		return (NULL);
 	temp = cmnd_list;
 	i = 0;
-	if (temp != NULL && temp->type != WORD && temp->type != PIPE)
+	if (temp != NULL && temp->type != WORD && temp->type != PIPE
+		&& check_red_name(temp->str) == FAILDE)
 		temp = temp->next->next;
+	else if (temp != NULL && temp->type != WORD
+		&& temp->type != PIPE && check_red_name(temp->str) == SUCCESS)
+		temp = temp->next;
 	while (temp != NULL && temp->type == WORD && i++ > -1)
 		temp = temp->next;
 	cmnd->cmnd = init_cmnd_table(cmnd_list, i + 1);
 	cmnd->env = init_env_table(env, size_envi(env) + 1);
 	return (cmnd);
-}
-
-void	free_tcmnd(t_cmnd *cmnd)
-{
-	if (cmnd->cmnd != NULL)
-		ft_free(cmnd->cmnd);
-	if (cmnd->env != NULL)
-		ft_free(cmnd->env);
-	if (cmnd != NULL)
-		free(cmnd);
 }

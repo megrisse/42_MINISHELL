@@ -3,51 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 17:42:01 by hameur            #+#    #+#             */
-/*   Updated: 2022/11/08 23:49:41 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:49:06 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	next_q(char *s, int i, char c, int key)
-{
-	i++;
-	while (s[i] != 0 && s[i] != c)
-		i++;
-	if (s[i] == 0 && key == 0)
-		return (FAILDE);
-	if (key == 1 && s[i] == 0)
-		return (i);
-	return (i + 1);
-}
-
-int	nbr_mots(char *s, char c)
+int	nbr_mots(char *s, char c, int nbr_mots)
 {
 	int	i;
-	int	nbr_mots;
 
 	i = 0;
-	nbr_mots = 0;
 	if (s[0] != c && s[0])
 		nbr_mots++;
 	while (s[i] != 0)
 	{
 		if (s[i] == DQUOTE || s[i] == SQUOTE)
 		{
-			i = next_q(s, i, s[i], 0);
+			i = next_q(s, i, s[i]);
 			if (i == FAILDE)
 				return (FAILDE);
 		}
 		else if (s[i] == c)
 		{
-			if (s[i + 1] != c && s[i + 1] != 0)
-			{
+			if (s[i + 1] != c && s[i + 1] != 0 && i++ > 0)
 				nbr_mots++;
-				i++;
-			}
 			else
 				i++;
 		}
@@ -81,7 +64,7 @@ int	find_char(char *str, int pos, char c, int id)
 	while (str[pos] != 0 && str[pos] != c)
 	{
 		if (str[pos] == DQUOTE || str[pos] == SQUOTE)
-			pos = next_q(str, pos, str[pos], 0);
+			pos = next_q(str, pos, str[pos]);
 		else
 			pos++;
 	}
@@ -126,6 +109,7 @@ char	**ft_split(char *s, char c)
 	char	**copy;
 	int		size;
 
+	size = 0;
 	if (!s)
 		return (NULL);
 	if (!*s)
@@ -135,7 +119,7 @@ char	**ft_split(char *s, char c)
 			return (NULL);
 		return (copy[0] = NULL, copy);
 	}
-	size = nbr_mots(s, c);
+	size = nbr_mots(s, c, size);
 	if (size == FAILDE)
 		return (printf("error quots\n"), NULL);
 	copy = (char **)malloc(sizeof(char *) * (size + 1));
@@ -143,18 +127,3 @@ char	**ft_split(char *s, char c)
 		return (NULL);
 	return (ft_remplissage(s, copy, c));
 }
-
-// int main(int ac, char **av)
-// {
-// 	char **str;
-// 	int i;
-// 	while (1)
-// 	{
-// 		char *line = readline("zebi=>");
-// 		str = ft_split(line, '|');
-// 		i = -1;
-// 		while (str != NULL && str[++i])
-// 			printf("%s\n", str[i]);
-// 		printf("\n");
-// 	}
-// }

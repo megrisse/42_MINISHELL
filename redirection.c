@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 19:39:55 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 22:32:50 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/10 16:21:49 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	*name_red(t_list *cmnd_list)
 	if (temp != NULL && temp->type != PIPE && temp->type != WORD)
 	{
 		while (temp->str[i] != 0
-			&& (temp->str[i] == '>' || temp->str[i] == '<'))
+			&& (temp->str[i] == '>' || temp->str[i] == '<') && i < 2)
 			i++;
 		if (temp->str[i] != 0)
 			return (temp->str + i);

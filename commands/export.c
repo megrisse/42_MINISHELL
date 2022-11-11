@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_vars.c                                         :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/09 00:10:17 by megrisse         ###   ########.fr       */
+/*   Created: 2022/11/10 14:41:43 by hameur            #+#    #+#             */
+/*   Updated: 2022/11/10 14:44:30 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,26 @@ int	check_var(char *cmnd)
 	return (SUCCESS);
 }
 
+void	print_ex(t_envi *env)
+{
+	while (env != NULL)
+	{
+		printf("declare -x %s\n", env->env_x);
+		env = env->next;
+	}
+}
+
+void	export_utils(t_envi *temp, char *value, char *name)
+{
+	change_var_value(temp, name, value);
+	free(name);
+	if (value != NULL)
+		free(value);
+}
+
 int	ft_export(t_cmnd *cmnd, t_envi **env)
 {
 	char	*name;
-	char	*value;
 	t_envi	*temp;
 	int		i;
 
@@ -58,25 +74,11 @@ int	ft_export(t_cmnd *cmnd, t_envi **env)
 		temp = find_var(*env, name);
 		if (temp != NULL)
 		{
-			value = value_var(cmnd->cmnd[i++]);
-			change_var_value(temp, name, value);
-			free(name);
-			if (value != NULL)
-				free(value);
+			export_utils(temp, value_var(cmnd->cmnd[i++]), name);
 			continue ;
 		}
 		add_back(env, new_node(cmnd->cmnd[i++]));
 		free(name);
 	}
-	return (SUCCESS);
-}
-
-int	ft_unset(t_cmnd *cmnd, t_envi **env)
-{
-	int	j;
-
-	j = 0;
-	while (cmnd->cmnd[++j])
-		unset_utils(*env, cmnd->cmnd[j]);
 	return (SUCCESS);
 }

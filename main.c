@@ -3,82 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 13:59:40 by megrisse          #+#    #+#             */
-/*   Updated: 2022/11/09 00:48:42 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/11 16:31:00 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-#include <sys/types.h>
-#include <sys/wait.h>
 
-//protect all malloc in your minishell
-int	check_red_name(char *str)
+int	pipe_utils(t_global *glb, t_list *current, char **cmnd, int n_cmnd)
 {
-	char	c;
-	int		i;
+	int	i;
 
 	i = 0;
-	c = str[i];
-	while (str[i] != 0 && str[i] == c)
-		i++;
-	if (c == '>')
-		c = '<';
-	else if (c == '<')
-		c = '>';
-	if (str[i] == 0 || str[i] == c)
-		return (FAILDE);
-	return (SUCCESS);
-}
-
-int	check_syntax(t_list **list)
-{
-	t_list	*cmnd;
-	int		prev;
-
-	cmnd = *list;
-	prev = -1;
-	while (cmnd != NULL)
+	while (i < n_cmnd)
 	{
-		if (cmnd->type == PIPE && (prev == -1 || cmnd->next == NULL))
-			return (ft_putstr_fd(2, "syntax error near unexpected token `|'\n"),
-				free_list(list, *list), FAILDE);
-		if (cmnd->type == PIPE)
-			prev = -1;
-		if (cmnd->type != WORD && cmnd->type != PIPE
-			&& check_red_name(cmnd->str) == FAILDE)
+		current = init_list(glb, current, cmnd[i], check_quotes(cmnd[i]));
+		glb->p_in = glb->lastfd;
+		if (cmnd[i + 1])
+		{
+			pipe(glb->fd);
+			glb->p_out = glb->fd[1];
+		}
+		if (glb->pid > 0)
+			glb->pid = fork();
+		if (glb->pid < 0)
 			return (ft_putstr_fd(2,
-					"syntax error near unexpected token `newline'\n"),
-				free_list(list, *list), FAILDE);
-		if (cmnd->type != PIPE && cmnd->next
-			!= NULL && cmnd->next->type == PIPE)
-			prev = 0;
-		cmnd = cmnd->next;
+					"fork: Resource temporarily unavailable\n"), 1);
+		if (glb->pid == 0)
+			exec_child(glb, current);
+		init_fds(glb, &i);
+		free_list(&current, current);
 	}
 	return (SUCCESS);
 }
 
-void	norm_shell(t_global *global, char *line)
+void	exit_status(t_global *glb)
 {
-	int	n_cmnd;
+	if (WIFEXITED(glb->status))
+		glb->status = WEXITSTATUS(glb->status);
+	else if (WIFSIGNALED(glb->status))
+		glb->status = 128 + WTERMSIG(glb->status);
+}
 
-	n_cmnd = nbr_mots(global->cmnd, '|');
-	ft_pipes(global, n_cmnd);
-	unlink(".heredoc");
-	free(line);
-	free_list(&global->cmnd_list, global->cmnd_list);
+int	ft_pipes(t_global *glb, int n_cmnd)
+{
+	t_list	*current;
+	char	**cmnd;
+
+	current = NULL;
+	glb->lastfd = -1;
+	glb->pid = 1;
+	cmnd = ft_split(glb->cmnd, '|');
+	if (n_cmnd == 1 && exec_onecmnd(glb, current, cmnd) == SUCCESS)
+		return (ft_free(cmnd), SUCCESS);
+	if (pipe_utils(glb, current, cmnd, n_cmnd) == FAILDE)
+		return (ft_free(cmnd), FAILDE);
+	while (waitpid(-1, &glb->status, 0) > 0)
+		;
+	exit_status(glb);
+	close(glb->lastfd);
+	return (ft_free(cmnd), SUCCESS);
 }
 
 int	shell(t_global *global)
 {
 	char	*line;
+	int		n_cmnd;
 
+	line = NULL;
 	while (1337)
 	{
-		global->p_in = -1;
-		global->p_out = -1;
+		if (line != NULL)
+			free(line);
+		init_glb(global, &n_cmnd);
 		line = readline("Minishel => ");
 		if (line == NULL)
 			ft_exit(global);
@@ -86,13 +85,12 @@ int	shell(t_global *global)
 			add_history(line);
 		else
 			continue ;
-		global->cmnd = line;
-		global->cmnd_list = init_list(global, global->cmnd_list, line, 0);
-		if (check_syntax(&global->cmnd_list) != SUCCESS)
+		if (init_and_check(global, line) == FAILDE)
 			continue ;
-		if (global->cmnd_list == NULL)
-			continue ;
-		norm_shell(global, line);
+		n_cmnd = nbr_mots(global->cmnd, '|', n_cmnd);
+		ft_pipes(global, n_cmnd);
+		unlink(".heredoc");
+		free_list(&global->cmnd_list, global->cmnd_list);
 	}
 	return (SUCCESS);
 }

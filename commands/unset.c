@@ -1,25 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_tools.c                                        :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/09 00:01:31 by megrisse          #+#    #+#             */
-/*   Updated: 2022/11/09 00:06:58 by megrisse         ###   ########.fr       */
+/*   Created: 2022/09/26 16:01:47 by hmeur             #+#    #+#             */
+/*   Updated: 2022/11/10 14:46:07 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../mini.h"
-
-void	print_ex(t_envi *env)
-{
-	while (env != NULL)
-	{
-		printf("declare -x %s\n", env->env_x);
-		env = env->next;
-	}
-}
 
 t_envi	*find_var(t_envi *env, char *name)
 {
@@ -40,16 +31,25 @@ void	unset_utils(t_envi *env, char *str)
 	t_envi	*temp;
 	int		i;
 
-	temp = env;
 	i = 0;
+	temp = env;
 	while (temp != NULL && i++ >= 0)
 	{
 		if (ft_strncmp(temp->var_name, str,
 				ft_strlen(temp->var_name)) == SUCCESS)
-		{
-			delete_node_env(&env, i - 1);
 			break ;
-		}
 		temp = temp->next;
 	}
+	if (temp != NULL)
+		delete_node_env(&env, i - 1);
+}
+
+int	ft_unset(t_cmnd *cmnd, t_envi **env)
+{
+	int	j;
+
+	j = 0;
+	while (cmnd->cmnd[++j])
+		unset_utils(*env, cmnd->cmnd[j]);
+	return (SUCCESS);
 }

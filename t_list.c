@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t_list.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: megrisse <megrisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hameur <hameur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 21:41:59 by hmeur             #+#    #+#             */
-/*   Updated: 2022/11/08 22:19:38 by megrisse         ###   ########.fr       */
+/*   Updated: 2022/11/11 14:10:32 by hameur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,36 +45,16 @@ int	add_back_list(t_list **head, t_list *new_node)
 	return (SUCCESS);
 }
 
-char	*change_str(t_global *glb, char *str)
+int	check_quotes(char *str)
 {
-	char	*ret;
-	int		**tab;
-	int		i;
-	int		j;
-	int		key;
+	int	i;
 
-	tab = (int **)malloc(sizeof(int *) * 2);
 	i = 0;
-	j = 0;
-	if (!tab)
-		return (NULL);
-	tab[0] = &i;
-	tab[1] = &j;
-	key = len_str(glb, str);
-	ret = (char *)malloc(sizeof(char) * (key + 1));
-	if (!ret)
-		return (NULL);
-	while (str[i] != 0)
-	{
-		if (str[i] == SQUOTE || str[i] == DQUOTE)
-			fct3(glb, str, ret, tab);
-		else if (str[i] == '$')
-			fct4(glb, str, ret, tab);
-		else
-			ret[j++] = str[i++];
-	}
-	ret[j] = 0;
-	return (free(tab), ret);
+	while (str[i] != 0 && str[i] != DQUOTE && str[i] != SQUOTE)
+		i++;
+	if (str[i] == DQUOTE || str[i] == SQUOTE)
+		return (1);
+	return (0);
 }
 
 t_list	*init_list(t_global *glb, t_list *head, char *str, int key)
@@ -83,22 +63,19 @@ t_list	*init_list(t_global *glb, t_list *head, char *str, int key)
 	char	*temp;
 	int		i;
 
-	cmnd = ft_split(str, ' ');
+	cmnd = split_pro_max(str);
 	i = 0;
 	head = NULL;
 	if (cmnd == NULL)
 		return (ft_putstr_fd(2, (char *)"Error quotes\n"), NULL);
-	while (cmnd != NULL && cmnd[i] != NULL)
+	while (cmnd[i] != NULL)
 	{
 		temp = change_str(glb, cmnd[i++]);
-		if (add_back_list(&head, new_list(temp,
-					key, check_quotes(cmnd[i - 1]))) != SUCCESS)
-			return (ft_free(cmnd), free(temp), free_list(&head, head),
-				ft_putstr_fd(2, "Error pipe\n"), NULL);
+		if (add_back_list(&head, new_list(temp, key,
+					check_quotes(cmnd[i - 1]))) != SUCCESS)
+			return (ft_free(cmnd), free(temp), free_list(&head, head), NULL);
 		free(temp);
 	}
 	ft_free(cmnd);
-	if (check_list(head) != SUCCESS)
-		return (free (str), free_list(&head, head), NULL);
 	return (head);
 }
